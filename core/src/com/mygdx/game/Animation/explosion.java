@@ -23,9 +23,10 @@ public class explosion extends ApplicationAdapter {
     float x;
     float y;
 
-    public explosion(/*String PATH*/float x, float y){
+    public explosion(int path, float x, float y){
+        String PATH = selectPath(path);
         batch = new SpriteBatch();
-        tex = new Texture("sprites/kisspng-sprite-explosion_pack/kisspng-sprite-explosion_pack2.png");
+        tex = new Texture(PATH);
         animFrames = new TextureRegion[9];
         this.x = x;
         this.y = y;
@@ -39,6 +40,19 @@ public class explosion extends ApplicationAdapter {
             }
         }
         anim = new Animation(1f/9f, animFrames);
+    }
+
+    private String selectPath(int nb) {
+        switch (nb){
+            case 1: //allyShip touched
+                return "sprites/kisspng-sprite-explosion_pack/kisspng-sprite-explosion_pack3.png";
+            case 2: //evil ship touched
+                return "sprites/kisspng-sprite-explosion_pack/kisspng-sprite-explosion_pack.png";
+            case 3: //ship dead
+                return "sprites/kisspng-sprite-explosion_pack/kisspng-sprite-explosion_pack2.png";
+            default: //wrong number m8
+                return "not_good_file";
+        }
     }
 
     public void render(){

@@ -3,6 +3,8 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Animation.bullets;
 import com.mygdx.game.Animation.explosion;
 import com.mygdx.game.ship.evilShip1;
@@ -17,6 +19,10 @@ public class CaptainGoon implements ApplicationListener {
 	ArrayList<heroShip>myShip;
 	ArrayList<ship>ships;
 	ArrayList<explosion>exp;
+
+	//background
+	Texture background;
+	SpriteBatch backBatch;
 
 
 	@Override
@@ -58,6 +64,7 @@ public class CaptainGoon implements ApplicationListener {
 		ArrayList<ship> removeShips = new ArrayList<>();
 		for (ship s : ships) {
 			if (s.isDead()) {
+				exp.add(new explosion(3, s.x, s.y));
 				removeShips.add(s);
 			}
 		}
@@ -66,6 +73,7 @@ public class CaptainGoon implements ApplicationListener {
 		for (heroShip s : myShip){
 			if (s.isDead()){
 				removeMe.add(s);
+				exp.add(new explosion(3,s.x,s.y));
 			}
 		}
 		myShip.removeAll(removeMe);
@@ -92,7 +100,7 @@ public class CaptainGoon implements ApplicationListener {
 				for (bullets b : s.bulletsArray){
 					if (hs.isHit(b)){
 						removeThis.add(b);
-						exp.add(new explosion(hs.x, hs.y));
+						exp.add(new explosion(1, hs.x-3*hs.width, hs.y));
 					}
 			}
 				s.bulletsArray.removeAll(removeThis);
@@ -105,6 +113,7 @@ public class CaptainGoon implements ApplicationListener {
 				for (bullets b : hs.bulletsArray) {
 					if (s.isHit(b) && b.y != Gdx.graphics.getHeight() - hs.height - hs.y) {
 						remove.add(b);
+						exp.add(new explosion(2 ,s.x-s.width ,s.y-2*s.height));
 					} else if (b.y == Gdx.graphics.getHeight() - hs.height - hs.y + 50) {
 						remove.add(b);
 					}
