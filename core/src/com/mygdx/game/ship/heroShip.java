@@ -5,8 +5,6 @@ import com.badlogic.gdx.Input;
 import com.mygdx.game.Animation.allyBullet;
 import com.mygdx.game.Animation.bullets;
 
-import java.util.ArrayList;
-
 public class heroShip extends ship{
     public heroShip() {
         super(100, 10, "sprites/ships/blueships1_small.png");
@@ -24,8 +22,7 @@ public class heroShip extends ship{
     //shooting command
     public void shoot(){
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && !isDead()){
-            bulletsArray.add(new allyBullet(this.x+10, this.y+40));
+            this.bulletsArray.add(new allyBullet(this.x+10, this.y+40));
         }
-        bulletDespawn();
     }
 }

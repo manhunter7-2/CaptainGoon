@@ -50,21 +50,8 @@ public abstract class ship {
         return this.life == 0;
     }
 
-    //make bullet despawn (maybe will be erased)
-    public void bulletDespawn(){
-        ArrayList<bullets>bin = new ArrayList<>();
-        if (bulletsArray != null) {
-            for (bullets a : bulletsArray) {
-                if (a.y > Gdx.graphics.getHeight() || a.y < 0 || isHit(a)) {
-                    bin.add(a);
-                }
-            }
-            bulletsArray.removeAll(bin);
-        }
-    }
-
     public boolean isHit(bullets s){
-        if (this.y==s.y-this.height && this.x<=s.x+this.width && this.x>=s.x-this.width){
+        if ((this.y==s.y-this.height || s.y >= Gdx.graphics.getHeight()-this.height) && s.x<=this.x+this.width && s.x>=this.x-this.width){
             this.life -= 10;
             return true;
         }
