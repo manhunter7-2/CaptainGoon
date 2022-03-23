@@ -26,15 +26,19 @@ public class bullets {
          this.s = new Sprite(tex);
     }
 
+    //updating of bullets
     public void update(float deltaTime){
         y += SPEED*deltaTime;
         if (y > Gdx.graphics.getHeight() || y <= 0){
             REMOVE = true;
         }
     }
+
+    //rendering of bullets
     public void render(){
         batch.begin();
         batch.draw(tex, this.x, this.y);
         batch.end();
     }
+
 }

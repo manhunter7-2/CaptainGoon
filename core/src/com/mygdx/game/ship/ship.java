@@ -12,9 +12,9 @@ import java.util.ArrayList;
 public abstract class ship {
     public float x;
     public float y;
-    int height = 70;
-    int width = 40;
-    int life = 100;
+    public int height = 70;
+    public int width = 40;
+    public int life = 100;
     int SPEED; // FOR EVIL USE ONLY
     boolean pos; //true=right, false=left || FOR EVIL USE ONLY TOO
     Texture tx;
@@ -31,29 +31,26 @@ public abstract class ship {
 
     }
 
+    //dispose of ship's texture
     public void dispose(){
         this.b.dispose();
         this.tx.dispose();
     }
 
+    //rendering of ship
     public void renderShip(){
         this.b.begin();
         this.b.draw(this.tx, this.x, this.y, this.width, this.height);
         this.b.end();
     }
 
-    public boolean isHit(bullets bullet){
-        if (this.y==bullet.y && this.x<=bullet.x && this.x>=bullet.x-this.width){
-            this.life -= 10;
-            return true;
-        }
-        return false;
-    }
 
+    //check if a ship is dead (life == 0)
     public boolean isDead(){
         return this.life == 0;
     }
 
+    //make bullet despawn (maybe will be erased)
     public void bulletDespawn(){
         ArrayList<bullets>bin = new ArrayList<>();
         if (bulletsArray != null) {
@@ -66,8 +63,16 @@ public abstract class ship {
         }
     }
 
-    //--- FOR EVIL PURPOSE ONLY ---
+    public boolean isHit(bullets s){
+        if (this.y==s.y-this.height && this.x<=s.x+this.width && this.x>=s.x-this.width){
+            this.life -= 10;
+            return true;
+        }
+        return false;
+    }
 
+    //--- FOR EVIL PURPOSE ONLY ---
+    //updates for evil ships only
     public void evilUpdate() {
         this.x += this.SPEED;
         if (this.pos){

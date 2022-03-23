@@ -12,6 +12,7 @@ public class heroShip extends ship{
         super(100, 10, "sprites/ships/blueships1_small.png");
     }
 
+    //updating hero ship
     public void update(){
         this.x = Gdx.input.getX();
         for (bullets a : bulletsArray){
@@ -20,8 +21,9 @@ public class heroShip extends ship{
         }
     }
 
+    //shooting command
     public void shoot(){
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && !isDead()){
             bulletsArray.add(new allyBullet(this.x+10, this.y+40));
         }
         bulletDespawn();

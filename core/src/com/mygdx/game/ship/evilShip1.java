@@ -13,6 +13,8 @@ public class evilShip1 extends ship {
         this.SPEED = Speed;
         this.pos = pos;
     }
+
+    //auto-shoot
     public void render(float deltaTime){
         if (deltaSpawn >= 1){
             this.bulletsArray.add(new enemyBulletSmall(this.x-10, this.y-50));

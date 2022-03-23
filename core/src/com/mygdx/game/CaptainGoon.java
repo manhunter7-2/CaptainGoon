@@ -15,6 +15,7 @@ public class CaptainGoon implements ApplicationListener {
 	private evilShip1 es;
 	ArrayList<ship>ships;
 
+
 	@Override
 	public void create() {
 		this.hs = new heroShip();
@@ -24,6 +25,7 @@ public class CaptainGoon implements ApplicationListener {
 		ships.add(es);
 	}
 
+	//initial set of ships
 	@Override
 	public void dispose() {
 		for (ship s : ships){
@@ -31,14 +33,18 @@ public class CaptainGoon implements ApplicationListener {
 		}
 	}
 
+	//render & updates
 	@Override
 	public void render() {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		//render of textures
 		hs.shoot();
 		hs.update();
 		es.render(Gdx.graphics.getDeltaTime());
 		es.evilUpdate();
 
+		//check if a ship is dead
 		ArrayList<ship> removeShips = new ArrayList<>();
 		for (ship s : ships) {
 			if (s.isDead()) {
@@ -47,14 +53,26 @@ public class CaptainGoon implements ApplicationListener {
 		}
 		ships.removeAll(removeShips);
 
-			for (ship s : ships) {
-				s.renderShip();
-				for (bullets b : s.bulletsArray){
-					b.render();
-					s.bulletDespawn();
-				}
+		for (ship s : ships) {
+			s.renderShip();
+			for (bullets b : s.bulletsArray){
+				b.render();
 			}
-}
+		}
+
+		ArrayList<bullets>removeThis = new ArrayList<>();
+		for (ship s : ships){
+			for (ship sb : ships){
+				for (bullets b : s.bulletsArray){
+					if (sb.isHit(b)){
+						removeThis.add(b);
+					}
+				}
+				sb.bulletsArray.removeAll(removeThis);
+			}
+		}
+
+	}
 
 	@Override
 	public void resize(int width, int height) {
