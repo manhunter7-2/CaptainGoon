@@ -137,13 +137,14 @@ public class game extends ApplicationAdapter {
     }
 		hs.bulletsArray.removeAll(remove);
 
+    //remove explosions
     ArrayList<explosion>removeExplosions = new ArrayList<>();
 		for (explosion e : exp){
-        e.render();
-        if (e.time >= 1/3f) {
-            removeExplosions.add(e);
+            e.render();
+            if (e.time >= 1/3f) {
+                removeExplosions.add(e);
+            }
         }
-    }
 		exp.removeAll(removeExplosions);
-}
+    }
 }
