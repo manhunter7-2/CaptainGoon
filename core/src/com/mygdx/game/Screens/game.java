@@ -26,7 +26,7 @@ public class game extends ApplicationAdapter {
 
     //background
     Texture background;
-    SpriteBatch back;
+    public SpriteBatch back;
     Sprite sprite;
     Camera cam;
 
