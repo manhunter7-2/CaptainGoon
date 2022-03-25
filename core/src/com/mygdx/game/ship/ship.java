@@ -14,12 +14,12 @@ import java.util.ArrayList;
 public abstract class ship {
     public float x;
     public float y;
-    public int height = 70;
-    public int width = 40;
+    public int height = 120;
+    public int width = 70;
     public int life = 100;
     int SPEED; // FOR EVIL USE ONLY
     boolean pos; //true=right, false=left || FOR EVIL USE ONLY TOO
-    float deltaSpawn;
+    float deltaSpawn; //for evil use only
     Texture tx;
     SpriteBatch b;
     Sprite s;

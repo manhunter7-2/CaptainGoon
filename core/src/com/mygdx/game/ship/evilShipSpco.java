@@ -5,7 +5,7 @@ import com.mygdx.game.Animation.bullets;
 
 public class evilShipSpco extends ship{
     public evilShipSpco() {
-        super(50, Gdx.graphics.getHeight()-80, "sprites/ships/spco_small.png");
+        super(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()-140, "sprites/ships/spco_small.png");
         this.SPEED = 3;
     }
 

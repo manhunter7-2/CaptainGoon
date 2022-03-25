@@ -21,7 +21,7 @@ public class mainMenu extends ApplicationAdapter {
         this.create();
         ScreenUtils.clear(0, 0, 0.2f, 1);
         textBatch.begin();
-        font.draw(textBatch, str, 275, Gdx.graphics.getHeight() / 2f);
+        font.draw(textBatch, str, 275, Gdx.graphics.getHeight()/2f);
         textBatch.end();
     }
 

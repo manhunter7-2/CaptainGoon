@@ -29,22 +29,25 @@ public class CaptainGoon extends ApplicationAdapter {
 
 	@Override
 	public void render() {
-		if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && menuSelect == 0){
-			menuSelect = 1;
+		if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
+			if(menuSelect == 0){
+				menuSelect = 1;
+			}
+			if (menuSelect == 1 && game.end == true){
+				menuSelect = 0;
+			}
 		}
 		switch(menuSelect){
 			case 0 :
 				main.render();
+				game.end = false;
 				break;
 			case 1 :
 				if (game.back == null){
 					game.create();
 				}
 				game.render();
-				break;
-			case 2 :
-				this.youLose();
-				break;
+
 		}
 	}
 
