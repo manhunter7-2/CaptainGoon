@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Animation.bullets;
+import com.mygdx.game.Animation.enemyBulletBig;
+import com.mygdx.game.Animation.enemyBulletSmall;
 
 import java.util.ArrayList;
 
@@ -17,6 +19,7 @@ public abstract class ship {
     public int life = 100;
     int SPEED; // FOR EVIL USE ONLY
     boolean pos; //true=right, false=left || FOR EVIL USE ONLY TOO
+    float deltaSpawn;
     Texture tx;
     SpriteBatch b;
     Sprite s;
@@ -74,6 +77,22 @@ public abstract class ship {
         }
         for (bullets b : bulletsArray){
             b.update(5);
+        }
+    }
+
+    //auto-shoot
+    public void evilRender(float deltaTime){
+        if (deltaSpawn >= 1){
+            if (this.getClass().getSimpleName().equals("evilShip1")) {
+                this.bulletsArray.add(new enemyBulletSmall(this.x - 10, this.y - 50));
+                deltaSpawn = 0;
+            }else{
+                this.bulletsArray.add(new enemyBulletBig(this.x-10, this.y-50));
+                deltaSpawn = 0;
+            }
+        }
+        else{
+            deltaSpawn = deltaSpawn+deltaTime;
         }
     }
 }
