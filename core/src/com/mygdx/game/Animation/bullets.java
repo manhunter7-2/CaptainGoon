@@ -9,15 +9,17 @@ public class bullets {
     public int SPEED;
     private Texture tex;
     public float x;
+    public int dmg;
     public float y;
     public boolean REMOVE = false;
     SpriteBatch batch;
     public Sprite s;
 
-    public bullets(float x, float y,int speed, String PATH2){
+    public bullets(float x, float y,int speed, int dmg, String PATH2){
          this.x = x;
          this.y = y;
          this.SPEED = speed;
+         this.dmg = dmg;
 
          if (tex == null){
              tex = new Texture(PATH2);

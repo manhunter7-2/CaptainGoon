@@ -68,7 +68,7 @@ public abstract class ship {
             }
         }
         if (!this.pos){
-            if (this.x <= 0 || this.x >= Gdx.graphics.getWidth()/2+1){
+            if (this.x <= 0 || this.x >= Gdx.graphics.getWidth()/2+10){
                 this.SPEED = -this.SPEED;
             }
         }

@@ -1,56 +1,101 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Animation.bullets;
 import com.mygdx.game.Animation.explosion;
+import com.mygdx.game.Screens.game;
+import com.mygdx.game.Screens.mainMenu;
 import com.mygdx.game.ship.evilShip1;
 import com.mygdx.game.ship.heroShip;
 import com.mygdx.game.ship.ship;
 import java.util.ArrayList;
 
 
-public class CaptainGoon implements ApplicationListener {
+public class CaptainGoon extends ApplicationAdapter {
 	private heroShip hs;
 	private evilShip1 es;
+	private evilShip1 es2;
 	ArrayList<heroShip>myShip;
 	ArrayList<ship>ships;
 	ArrayList<explosion>exp;
 
 	//background
 	Texture background;
-	SpriteBatch backBatch;
+	SpriteBatch back;
+	Sprite sprite;
+	Camera cam;
+
+	mainMenu main;
+	game game;
+
+	int menuSelect;
 
 
 	@Override
 	public void create() {
 		this.hs = new heroShip();
 		this.es = new evilShip1(-4, true);
+		this.es2 = new evilShip1(-4, false);
 		ships = new ArrayList<>();
 		myShip = new ArrayList<>();
 		ships.add(es);
+		ships.add(es2);
 		myShip.add(hs);
 		exp = new ArrayList<>();
+
+		background = new Texture(Gdx.files.internal("backgrounds/Blue Nebula 1 - 1024x1024.png"));
+		sprite = new Sprite(background);
+		back = new SpriteBatch();
+		cam = new OrthographicCamera();
+
+		main = new mainMenu();
+		game = new game();
 	}
+
 
 
 	@Override
 	public void dispose() {
-		for (ship s : ships){
-			s.dispose();
-		}
-		for (heroShip s : myShip){
-			s.dispose();
-		}
+//		for (ship s : ships){
+//			s.dispose();
+//		}
+//		for (heroShip s : myShip){
+//			s.dispose();
+//		}
+		game.dispose();
 	}
 
 
 	@Override
 	public void render() {
+		menuSelect = 1;
+		switch(menuSelect){
+			case 0 :
+				main.render();
+				break;
+			case 1 :
+				game.render();
+				break;
+			case 2 :
+				this.youLose();
+				break;
+		}
+	}
+
+	public void gameMode(){
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		back.begin();
+		sprite.draw(back);
+		back.end();
 
 		//render of textures
 		for (heroShip s : myShip){
@@ -59,6 +104,8 @@ public class CaptainGoon implements ApplicationListener {
 		}
 		es.render(Gdx.graphics.getDeltaTime());
 		es.evilUpdate();
+		es2.render(Gdx.graphics.getDeltaTime());
+		es2.evilUpdate();
 
 		//check if a ship is dead
 		ArrayList<ship> removeShips = new ArrayList<>();
@@ -97,13 +144,13 @@ public class CaptainGoon implements ApplicationListener {
 		//Check if we're hit
 		ArrayList<bullets>removeThis = new ArrayList<>(); //to remove bullets of evil ships
 		for (ship s : ships){
-				for (bullets b : s.bulletsArray){
-					if (hs.isHit(b)){
-						removeThis.add(b);
-						exp.add(new explosion(1, hs.x-3*hs.width, hs.y));
-					}
+			for (bullets b : s.bulletsArray){
+				if (hs.isHit(b)){
+					removeThis.add(b);
+					exp.add(new explosion(1, hs.x-3*hs.width, hs.y));
+				}
 			}
-				s.bulletsArray.removeAll(removeThis);
+			s.bulletsArray.removeAll(removeThis);
 		}
 
 		//Check if we hit ship
@@ -130,6 +177,11 @@ public class CaptainGoon implements ApplicationListener {
 			}
 		}
 		exp.removeAll(removeExplosions);
+	}
+
+
+	public void youLose(){
+
 	}
 
 	@Override

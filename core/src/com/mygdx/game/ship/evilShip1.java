@@ -1,7 +1,6 @@
 package com.mygdx.game.ship;
 
 import com.badlogic.gdx.Gdx;
-import com.mygdx.game.Animation.bullets;
 import com.mygdx.game.Animation.enemyBulletSmall;
 
 import java.util.ArrayList;
