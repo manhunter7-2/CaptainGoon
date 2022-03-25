@@ -117,11 +117,13 @@ public class game extends ApplicationAdapter {
         heroSprite.draw(heroSticker);
         heroSprite.setSize(32, 32);
         heroSprite.setPosition(20, 20);
+        heroLife.draw(heroSticker, hs.life +"%", heroSprite.getX()+heroSprite.getWidth(), heroSprite.getY()+10);
         heroSticker.end();
 
         bossSticker.begin();
         bossSprite.draw(bossSticker);
         bossSprite.setSize(32,32);
+        bossLife.draw(bossSticker, boss.life +"%", bossSprite.getX()-heroSprite.getWidth(), bossSprite.getY()+10);
         bossSprite.setPosition(Gdx.graphics.getWidth()-20-bossSprite.getWidth(), 20);
         bossSticker.end();
 
@@ -156,10 +158,7 @@ public class game extends ApplicationAdapter {
 		for (heroShip s : myShip){
             if (s.isDead()){
                 removeMe.add(s);
-                endBatch.begin();
-                endFont.draw(endBatch, "GAME OVER", Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f);
                 exp.add(new explosion(3,s.x,s.y));
-                end = true;
             }
         }
 		myShip.removeAll(removeMe);
@@ -257,9 +256,15 @@ public class game extends ApplicationAdapter {
 		exp.removeAll(removeExplosions);
 
         //winning conditions
-        if (ships.size() == 0 && !hs.isDead() && bossArray.size()==0){
+        if (ships.size()==0 && !hs.isDead() && bossArray.size()==0){
             endBatch.begin();
             endFont.draw(endBatch, "YOU SAVED THE WORLD !", Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f);
+            endBatch.end();
+            end = true;
+        }
+        if (myShip.size() == 0){
+            endBatch.begin();
+            endFont.draw(endBatch, "GAME OVER", Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f);
             endBatch.end();
             end = true;
         }

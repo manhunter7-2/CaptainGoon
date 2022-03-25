@@ -12,7 +12,10 @@ public class heroShip extends ship{
 
     //updating hero ship
     public void update(){
-        this.x = Gdx.input.getX();
+        if (Gdx.input.getX() < Gdx.graphics.getWidth()-this.width)
+        {
+            this.x = Gdx.input.getX();
+        }
         for (bullets a : bulletsArray){
             a.render();
             a.update(5);

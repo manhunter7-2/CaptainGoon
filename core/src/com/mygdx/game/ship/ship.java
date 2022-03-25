@@ -55,7 +55,8 @@ public abstract class ship {
 
     public boolean isHit(bullets s){
         if ((this.y==s.y-this.height || s.y >= Gdx.graphics.getHeight()-this.height) && s.x<=this.x+this.width && s.x>=this.x-this.width){
-            this.life -= 10;
+            this.life -= s.dmg;
+            this.b.setColor(1,1+((this.life-100)/100f), 1+((this.life-100)/100f), 1);
             return true;
         }
         return false;
@@ -66,12 +67,12 @@ public abstract class ship {
     public void evilUpdate() {
         this.x += this.SPEED;
         if (this.pos){
-            if (this.x <= Gdx.graphics.getWidth()/2-1 || this.x >= Gdx.graphics.getWidth()-this.width){
+            if (this.x <= Gdx.graphics.getWidth()/2f-1 || this.x >= Gdx.graphics.getWidth()-this.width){
                 this.SPEED = -this.SPEED;
             }
         }
         if (!this.pos){
-            if (this.x <= 0 || this.x >= Gdx.graphics.getWidth()/2+10){
+            if (this.x <= 0 || this.x >= Gdx.graphics.getWidth()/2f+10){
                 this.SPEED = -this.SPEED;
             }
         }
@@ -85,11 +86,10 @@ public abstract class ship {
         if (deltaSpawn >= 1){
             if (this.getClass().getSimpleName().equals("evilShip1")) {
                 this.bulletsArray.add(new enemyBulletSmall(this.x - 10, this.y - 50));
-                deltaSpawn = 0;
             }else{
                 this.bulletsArray.add(new enemyBulletBig(this.x-10, this.y-50));
-                deltaSpawn = 0;
             }
+            deltaSpawn = 0;
         }
         else{
             deltaSpawn = deltaSpawn+deltaTime;
