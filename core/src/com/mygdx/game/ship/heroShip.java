@@ -20,12 +20,17 @@ public class heroShip extends ship{
             a.render();
             a.update(5);
         }
+
+        if (Gdx.input.getY()>=500){
+            this.y = Gdx.graphics.getHeight()-Gdx.input.getY();
+            System.out.println(Gdx.input.getY());
+        }
     }
 
     //shooting command
     public void shoot(){
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && !isDead()){
-            this.bulletsArray.add(new allyBullet(this.x+10, this.y+40));
+            this.bulletsArray.add(new allyBullet(this.x+this.width/2f, this.y+50));
         }
     }
 }

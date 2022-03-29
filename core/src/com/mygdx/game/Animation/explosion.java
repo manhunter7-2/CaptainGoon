@@ -39,7 +39,7 @@ public class explosion extends ApplicationAdapter {
                 animFrames[cpt++] = tmp[cpt3][cpt2];
             }
         }
-        anim = new Animation(1f/9f, animFrames);
+        anim = new Animation(1/9f, animFrames);
     }
 
     private String selectPath(int nb) {

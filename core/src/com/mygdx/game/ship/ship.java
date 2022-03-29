@@ -17,7 +17,7 @@ public abstract class ship {
     public int height = 120;
     public int width = 70;
     public int life = 100;
-    int SPEED; // FOR EVIL USE ONLY
+    double SPEED; // FOR EVIL USE ONLY
     boolean pos; //true=right, false=left || FOR EVIL USE ONLY TOO
     float deltaSpawn; //for evil use only
     Texture tx;
@@ -50,14 +50,27 @@ public abstract class ship {
 
     //check if a ship is dead (life == 0)
     public boolean isDead(){
-        return this.life == 0;
+        if (this.life <=0){
+            this.life = 0;
+            return true;
+        }
+        return false;
     }
 
     public boolean isHit(bullets s){
-        if ((this.y==s.y-this.height || s.y >= Gdx.graphics.getHeight()-this.height) && s.x<=this.x+this.width && s.x>=this.x-this.width){
-            this.life -= s.dmg;
-            this.b.setColor(1,1+((this.life-100)/100f), 1+((this.life-100)/100f), 1);
-            return true;
+        if (this.getClass().getSimpleName().equals("heroShip")){
+            if ((s.y<=this.y+this.height || s.y >= Gdx.graphics.getHeight()-this.height) && s.x<=this.x+(this.width/2f) && s.x>=this.x-(this.width/2f)) {
+                this.life -= s.dmg;
+                this.b.setColor(1, 1 + ((this.life - 100) / 100f), 1 + ((this.life - 100) / 100f), 1);
+                return true;
+            }
+        }
+        if (!this.getClass().getSimpleName().equals("heroShip")) {
+            if (s.y <= this.y + this.height && s.y >= Gdx.graphics.getHeight() - this.height && s.x <= this.x + (this.width / 2f) && s.x >= this.x - (this.width / 2f)) {
+                this.life -= s.dmg;
+                this.b.setColor(1, 1 + ((this.life - 100) / 100f), 1 + ((this.life - 100) / 100f), 1);
+                return true;
+            }
         }
         return false;
     }
@@ -67,7 +80,7 @@ public abstract class ship {
     public void evilUpdate() {
         this.x += this.SPEED;
         if (this.pos){
-            if (this.x <= Gdx.graphics.getWidth()/2f-1 || this.x >= Gdx.graphics.getWidth()-this.width){
+            if (this.x <= Gdx.graphics.getWidth()/2f-1 || this.x >= Gdx.graphics.getWidth()+1-this.width){
                 this.SPEED = -this.SPEED;
             }
         }
@@ -79,6 +92,7 @@ public abstract class ship {
         for (bullets b : bulletsArray){
             b.update(5);
         }
+
     }
 
     //auto-shoot

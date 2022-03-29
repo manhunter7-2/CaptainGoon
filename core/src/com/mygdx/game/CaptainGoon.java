@@ -34,6 +34,9 @@ public class CaptainGoon extends ApplicationAdapter {
 				menuSelect = 1;
 			}
 			if (menuSelect == 1 && game.end) {
+				if (game.myShip.size()==0 || (game.ships.size()==0 && game.bossArray.size()==0)){
+					game.create();
+				}
 				menuSelect = 0;
 			}
 		}
@@ -47,7 +50,6 @@ public class CaptainGoon extends ApplicationAdapter {
 					game.create();
 				}
 				game.render();
-
 		}
 	}
 }

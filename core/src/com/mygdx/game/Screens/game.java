@@ -26,9 +26,9 @@ public class game extends ApplicationAdapter {
     private evilShip1 es2;
     private evilShipSpco boss;
 
-    ArrayList<heroShip> myShip;
-    ArrayList<ship>ships;
-    ArrayList<evilShipSpco>bossArray;
+    public ArrayList<heroShip> myShip;
+    public ArrayList<ship>ships;
+    public ArrayList<evilShipSpco>bossArray;
     ArrayList<explosion>exp;
 
     //background
@@ -37,16 +37,13 @@ public class game extends ApplicationAdapter {
     Sprite sprite;
     Camera cam;
 
-    //--- win/lose conditions
-    SpriteBatch endBatch;
+    //win/lose conditions
     BitmapFont endFont;
 
     //life
-    SpriteBatch heroSticker;
     Texture heroShipSticker;
     Sprite heroSprite;
     BitmapFont heroLife;
-    SpriteBatch bossSticker;
     Texture bossShipSticker;
     Sprite bossSprite;
     BitmapFont bossLife;
@@ -54,8 +51,8 @@ public class game extends ApplicationAdapter {
 
     public void create(){
         //evil ships
-        this.es = new evilShip1(-3, true, 2);
-        this.es2 = new evilShip1(-3, false, 1);
+        this.es = new evilShip1( -4,true, 2);
+        this.es2 = new evilShip1(4, false, 1);
         this.boss = new evilShipSpco();
         ships = new ArrayList<>();
         bossArray = new ArrayList<>();
@@ -76,16 +73,13 @@ public class game extends ApplicationAdapter {
         cam = new OrthographicCamera();
 
         //winning conditions
-        endBatch = new SpriteBatch();
         endFont = new BitmapFont();
 
         //life
-        heroSticker = new SpriteBatch();
         heroShipSticker = new Texture("sprites/ships/blueships1_small.png");
         heroSprite = new Sprite(heroShipSticker);
         heroLife = new BitmapFont();
 
-        bossSticker = new SpriteBatch();
         bossShipSticker = new Texture("sprites/ships/spco_small.png");
         bossSprite = new Sprite(bossShipSticker);
         bossLife = new BitmapFont();
@@ -107,33 +101,29 @@ public class game extends ApplicationAdapter {
     public void render(){
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //render drawing
+        //RENDER BACKGROUND
 		back.begin();
 		sprite.draw(back);
         sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		back.end();
 
-        heroSticker.begin();
-        heroSprite.draw(heroSticker);
+        heroSprite.draw(back);
         heroSprite.setSize(32, 32);
         heroSprite.setPosition(20, 20);
-        heroLife.draw(heroSticker, hs.life +"%", heroSprite.getX()+heroSprite.getWidth(), heroSprite.getY()+10);
-        heroSticker.end();
+        heroLife.draw(back, hs.life +"%", heroSprite.getX()+heroSprite.getWidth(), heroSprite.getY()+10);
 
-        bossSticker.begin();
-        bossSprite.draw(bossSticker);
+        bossSprite.draw(back);
         bossSprite.setSize(32,32);
-        bossLife.draw(bossSticker, boss.life +"%", bossSprite.getX()-heroSprite.getWidth(), bossSprite.getY()+10);
+        bossLife.draw(back, boss.life +"%", bossSprite.getX()-heroSprite.getWidth(), bossSprite.getY()+10);
         bossSprite.setPosition(Gdx.graphics.getWidth()-20-bossSprite.getWidth(), 20);
-        bossSticker.end();
+        back.end();
 
-        //render of heroShip
+        //RENDER OF PLAYER'S SHIP
 		for (heroShip s : myShip){
             s.shoot();
             s.update();
         }
 
-        //render of evil ships
+        //RENDER OF EVIL SHIPS
 		es.evilRender(Gdx.graphics.getDeltaTime());
 		es.evilUpdate();
 		es2.evilRender(Gdx.graphics.getDeltaTime());
@@ -144,33 +134,34 @@ public class game extends ApplicationAdapter {
         //CHECK FOR DEAD SHIPS
         //evil
         ArrayList<ship> removeShips = new ArrayList<>();
+
 		for (ship s : ships) {
             if (s.isDead()) {
                 exp.add(new explosion(3, s.x, s.y));
                 removeShips.add(s);
-                end = true;
             }
         }
-
+        ships.removeAll(removeShips);
+        removeShips.clear();
         //hero
 		ships.removeAll(removeShips);
-        ArrayList<heroShip>removeMe = new ArrayList<>();
 		for (heroShip s : myShip){
             if (s.isDead()){
-                removeMe.add(s);
+                removeShips.add(s);
                 exp.add(new explosion(3,s.x,s.y));
             }
         }
-		myShip.removeAll(removeMe);
-
+		myShip.removeAll(removeShips);
+        removeShips.clear();
         //boss
-        ArrayList<evilShipSpco>removeBoss = new ArrayList<>();
         if (boss.isDead()){
-            removeBoss.add(boss);
+            removeShips.add(boss);
         }
-        bossArray.removeAll(removeBoss);
+        bossArray.removeAll(removeShips);
+        removeShips.clear();
 
-        //render ships + bullets of evil guys
+
+        //RENDER SHIPS + BULLETS OF EVIL GUYS
 		for (ship s : ships) {
             s.renderShip();
             for (bullets b : s.bulletsArray){
@@ -184,7 +175,7 @@ public class game extends ApplicationAdapter {
             }
         }
 
-        //render ship's bullets
+        //RENDER PLAYER'S SHIP BULLETS
 		for (heroShip s : myShip) {
             s.renderShip();
             for (bullets b : s.bulletsArray) {
@@ -192,14 +183,17 @@ public class game extends ApplicationAdapter {
             }
         }
 
-        //Check if we're hit
+        //CHECK IF PLAYER IS HIT
         ArrayList<bullets>removeThis = new ArrayList<>(); //to remove bullets of evil ships
 		for (ship s : ships){
             for (bullets b : s.bulletsArray){
                 for (heroShip he : myShip) {
                     if (he.isHit(b)) {
                         removeThis.add(b);
-                        exp.add(new explosion(1, he.x - 3 * he.width, he.y));
+                        exp.add(new explosion(1, he.x-he.width, he.y-(he.height/2f)));
+                    }
+                    if (b.y<=0){
+                        removeThis.add(b);
                     }
                 }
             }
@@ -210,42 +204,43 @@ public class game extends ApplicationAdapter {
                 for (heroShip he : myShip) {
                     if (he.isHit(b)) {
                         removeThis.add(b);
-                        exp.add(new explosion(1, he.x - 3 * he.width, he.y));
+                        exp.add(new explosion(1, he.x-he.width, he.y-(he.height/2f)));
+                    }
+                    if (b.y<=0){
+                        removeThis.add(b);
                     }
                 }
             }
             boss.bulletsArray.removeAll(removeThis);
         }
 
-        //Check if we hit ship
+        //CHECK IF PLAYER SHOOTS AT SHIP
         ArrayList<bullets>remove = new ArrayList<>();
         for (heroShip hs : myShip) {
             for (ship s : ships) {
                 for (bullets b : hs.bulletsArray) {
                     if (s.isHit(b) && b.y != Gdx.graphics.getHeight() - hs.height - hs.y) {
                         remove.add(b);
-                        exp.add(new explosion(2 ,s.x-s.width ,s.y-2*s.height));
-                    } else if (b.y == Gdx.graphics.getHeight() - hs.height - hs.y + 50) {
+                        exp.add(new explosion(2 ,s.x-s.width ,s.y-20-(s.height/2f)));
+                    } else if (b.y == Gdx.graphics.getHeight()) {
                         remove.add(b);
                     }
                 }
             }
             for(evilShipSpco boss : bossArray){
                 for (bullets b : hs.bulletsArray){
-                    for (heroShip he : myShip) {
-                        if (boss.isHit(b) && b.y != Gdx.graphics.getHeight() - he.height - he.y) {
-                            remove.add(b);
-                            exp.add(new explosion(2, boss.x - boss.width, boss.y - 2 * boss.height));
-                        } else if (b.y == Gdx.graphics.getHeight() - he.height - he.y + 50) {
-                            remove.add(b);
-                        }
+                    if (boss.isHit(b)) {
+                        remove.add(b);
+                        exp.add(new explosion(2, boss.x, boss.y - 20 - (boss.height/2f)));
+                    } else if (b.y >=600) {
+                        remove.add(b);
                     }
                 }
             }
         }
 		hs.bulletsArray.removeAll(remove);
 
-        //remove explosions
+        //REMOVE EXPLOSIONS
         ArrayList<explosion>removeExplosions = new ArrayList<>();
 		for (explosion e : exp){
             e.render();
@@ -255,17 +250,17 @@ public class game extends ApplicationAdapter {
         }
 		exp.removeAll(removeExplosions);
 
-        //winning conditions
+        //WINNING CONDITIONS
         if (ships.size()==0 && !hs.isDead() && bossArray.size()==0){
-            endBatch.begin();
-            endFont.draw(endBatch, "YOU SAVED THE WORLD !", Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f);
-            endBatch.end();
+            back.begin();
+            endFont.draw(back, "YOU SAVED THE WORLD !", Gdx.graphics.getWidth()/2f-70, Gdx.graphics.getHeight()/2f);
+            back.end();
             end = true;
         }
         if (myShip.size() == 0){
-            endBatch.begin();
-            endFont.draw(endBatch, "GAME OVER", Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f);
-            endBatch.end();
+            back.begin();
+            endFont.draw(back, "GAME OVER", Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f);
+            back.end();
             end = true;
         }
 
