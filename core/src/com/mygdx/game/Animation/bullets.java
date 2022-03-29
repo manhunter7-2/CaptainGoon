@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class bullets {
     public float SPEED;
-    private Texture tex;
+    private final Texture tex;
     public float x;
     public int dmg;
     public float y;
